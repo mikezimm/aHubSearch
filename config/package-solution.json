@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "a-hub-search-client-side-solution",
+    "id": "edff21a7-9af0-430c-afcb-b94b6e302719",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.15.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "a-hub-search description"
+      },
+      "longDescription": {
+        "default": "a-hub-search description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "a-hub-search Feature",
+        "description": "The feature that activates elements of the a-hub-search solution.",
+        "id": "2d532709-6490-49c5-b552-813e3630977e",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/a-hub-search.sppkg"
+  }
+}

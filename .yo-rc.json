@@ -1,0 +1,16 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "version": "1.15.2",
+    "libraryName": "a-hub-search",
+    "libraryId": "edff21a7-9af0-430c-afcb-b94b6e302719",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "a-hub-search",
+    "solutionShortDescription": "a-hub-search description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
