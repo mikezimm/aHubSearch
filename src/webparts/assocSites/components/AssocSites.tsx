@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './AssocSites.module.scss';
 import { IAssocSitesProps, IAssocSitesState } from './IAssocSitesProps';
 import { escape } from '@microsoft/sp-lodash-subset';
-import { SPHttpClient, IHttpClientOptions } from '@microsoft/sp-http';
+import { SPHttpClient, IHttpClientOptions, SPHttpClientResponse } from '@microsoft/sp-http';
 // import { getAssocSites } from '@mikezimm/fps-library-v2/lib/pnpjs/Hubs/getAssocSites';
 // import { getAssociatedSitesTest, IAssocHubsErrorObj } from '@mikezimm/fps-pnp2/lib/services/sp/hubs/getAssocSitesTest';
 
@@ -36,24 +36,28 @@ export default class AssocSites extends React.Component<IAssocSitesProps, IAssoc
 
     const options: any = {
       getNoMetadata: {
-        headers: { 'ACCEPT' : 'application/json; odata.metadata=none' }
+        // headers: { 'ACCEPT' : 'application/json; odata.metadata=none' }
+        headers: { 'ACCEPT': 'application/json; odata=nometadata' }
       }
     }
 
+    console.log( await this.getSearchResults( this.props.context.pageContext.web.absoluteUrl , '' ));
     const departmentId = this.props.context.pageContext.legacyPageContext.departmentId;
     console.log( 'departmentId', departmentId ); // Verified getting departmentId
 
     const api1:  string =  `${window.location.origin}/sites/Templates/_api/search/query?`;
+    // const api1:  string =  `${window.location.origin}/sites/_api/search/query?`;
     // const apiQuery: string = `querytext=%27contentclass:STS_Site%20AND%20departmentId:{${departmentId}}%27&amp;`;
     // const apiSelect: string = `selectproperties=%27Title,SiteLogo%27&amp;`;
     // const apiOthers: string = `trimduplicates=false&amp;clienttype=%27ContentSearchRegular%27`;
 
     // const fullApi: string = `${ api1 }${ apiQuery }${ apiSelect }${ apiOthers }`;
     const fullApi: string = `${ api1 }querytext='sharepoint'`;
+    // const fullApi: string = `${window.location.origin}/sites/Templates/_api/web/title`;
 
     console.log( 'apiEndPoint', fullApi ); // pasting this value into the browser will give me the results.
 
-    const response: any = await this.props.spHttpClient.get(fullApi, SPHttpClient.configurations.v1, options.getNoMetadata );
+    const response: any = await this.props.spHttpClient.get(fullApi, SPHttpClient.configurations.v1 , options.getNoMetadata );
     const stateResponse: any =  await response.json();
     
     console.log( 'response', stateResponse );
@@ -61,6 +65,30 @@ export default class AssocSites extends React.Component<IAssocSitesProps, IAssoc
     this.setState({ response: stateResponse });
 
  }
+
+ 	/**************************************************************************************************
+	 * Recursively executes the specified search query using batches of 500 results until all results are fetched
+	 * @param webUrl : The web url from which to call the search API
+	 * @param queryParameters : The search query parameters following the "/_api/search/query?" part
+	 * @param startRow : The row from which the search needs to return the results from
+	 **************************************************************************************************/
+   public getSearchResults(webUrl: string, queryParameters: string, ): Promise<any> {
+		return new Promise<any>((resolve,reject) => {
+
+      const api1:  string =  `${webUrl}/_api/search/query?querytext=`;
+      const fullApi: string = `${ api1 }'sharepoint'`;
+
+			this.props.spHttpClient.get(fullApi, SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
+				if(response.ok) {
+					resolve(response.json());
+				}
+				else {
+					reject(response.statusText);
+				}
+			})
+			.catch((error) => { reject(error); }); 
+		});	
+	}
 
   public render(): React.ReactElement<IAssocSitesProps> {
     const {
